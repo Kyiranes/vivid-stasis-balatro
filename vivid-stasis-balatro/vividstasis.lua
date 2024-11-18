@@ -86,3 +86,32 @@ SMODS.Joker{
         end
     end
 }
+SMODS.Joker{
+    key='mountainview',
+    loc_txt = {
+        name = "Mountain View",
+        text = {
+            "In the first hand of round",
+            "Retriggers all played cards #1# time(s)"
+    },
+    config = {repetitions = 1},
+    rarity = 2,
+    blueprint_compat = true,
+    atlas = 'vividstasis1',
+    pos = { x = 0, y = 0},
+    cost = 5,
+    loc_vars = function(self,card,context)
+        return { vars = {card.ability.extra.repetitions}}
+    end
+    calculate = function(self,card,context)
+        if context.joker_main and G.GAME.current_round.hands_played == 0 then
+            return{
+                message = 'Again!'
+                color = G.C.FILTER,
+                repetitions = card.ability.extra.repetitions,
+                card = card
+            }
+        end
+    end
+}
+}
