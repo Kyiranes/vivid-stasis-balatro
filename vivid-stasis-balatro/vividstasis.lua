@@ -30,13 +30,13 @@ SMODS.Joker{
     pos = { x = 0, y = 0},
     cost = 4,
     loc_vars = function(self, info_queue, card)
-        return { vars = {card.ability.extra.chip_gain, card.ability.extra.chip_gain * G.GAME.current_round.hands_left} }
+        return { vars = {card.ability.extra.chip_gain, card.ability.extra.chip_gain * G.GAME.current_round.hands_left + card.ability.extra.chip_gain} }
     end,
     calculate = function(self,card,context)
         if context.joker_main then
             return {
                 chip_mod = card.ability.extra.chip_gain * G.GAME.current_round.hands_left,
-                message = localize { type = 'variable', key = 'a_chips', vars = { card.ability.extra.chip_gain * G.GAME.current_round.hands_left} }
+                message = localize { type = 'variable', key = 'a_chips', vars = { card.ability.extra.chip_gain * G.GAME.current_round.hands_left + card.ability.extra.chip_gain} }
             }
         end
     end
