@@ -56,7 +56,7 @@ SMODS.Joker{
     atlas = 'vividstasis1',
     pos = { x = 0, y = 0},
     cost = 4,
-    hands_in_row = 0;
+    hands_in_row = 0,
     loc_vars = function(self, info_queue, card)
         return { vars = {card.ability.extra.mult, card.ability.extra.mult_gain}}
     end,
@@ -68,11 +68,11 @@ SMODS.Joker{
             }
         end
         if context.before and not context.blueprint then
-            card.ability.extra.mult = card.ability.extra.mult_gain + card.ability.extra.mult,
+            card.ability.extra.mult = card.ability.extra.mult_gain + card.ability.extra.mult
             return {
                 message = 'Upgraded!',
                 colour = G.C.MULT,
-                card = card\
+                card = card,
                 hands_in_row += 1
             }
         end
@@ -81,7 +81,7 @@ SMODS.Joker{
             return {
                 message = 'Reset!',
                 colour = G.C.MULT,
-                card = card
+                card = card,
                 hands_in_row = 0
             }
         end
