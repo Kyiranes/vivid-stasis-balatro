@@ -68,7 +68,7 @@ SMODS.Joker{
             }
         end
         if context.before and not context.blueprint then
-            card.ability.extra.mult = card.ability.extra.mult_gain + card.ability.extra.mult
+            card.ability.extra.mult = card.ability.extra.mult_gain + card.ability.extra.mult,
             return {
                 message = 'Upgraded!',
                 colour = G.C.MULT,
