@@ -73,7 +73,7 @@ SMODS.Joker{
                 message = 'Upgraded!',
                 colour = G.C.MULT,
                 card = card,
-                hands_in_row += 1
+                hands_in_row = hands_in_row + 1
             }
         end
         if context.discard and not context.blueprint and context.other_card == context.full_hand[#context.full_hand] then
