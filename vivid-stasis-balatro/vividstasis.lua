@@ -26,6 +26,7 @@ SMODS.Joker{
     },
     config = { extra = {chip_gain = 40} },
     rarity = 1,
+    blueprint_compat = true,
     atlas = 'vividstasis1',
     pos = { x = 0, y = 0},
     cost = 4,
@@ -53,6 +54,7 @@ SMODS.Joker{
     },
     config = { extra = {mult = 0, mult_gain = 5} },
     rarity = 1,
+    blueprint_compat = true,
     atlas = 'vividstasis1',
     pos = { x = 0, y = 0},
     cost = 4,
@@ -67,7 +69,7 @@ SMODS.Joker{
             }
         end
         if context.before and not context.blueprint then
-            card.ability.extra.mult = card.ability.extra.mult_gain + card.ability.extra.mult
+            card.ability.extra.mult = card.ability.extra.mult_gain * G.GAME.current_round.hands_played
             return {
                 message = 'Upgraded!',
                 colour = G.C.MULT,
