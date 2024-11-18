@@ -41,3 +41,30 @@ SMODS.Joker{
         end
     end
 }
+SMODS.Joker{
+    key='movator',
+    loc_txt = {
+        name = "Movator",
+        text = {
+            "Gains #1# Mult",
+            "per consecutive hand",
+            "{C:inactive}(Currently {C:mult}+#2#{C:inactive} Mult)",
+        }
+    },
+    config = { extra = {mult_gain = 5} },
+    rarity = 1,
+    atlas = 'vividstasis1',
+    pos = { x = 0, y = 0},
+    cost = 4,
+    loc_vars = function(self, info_queue, card)
+        return { vars = {card.ability.extra.mult_gain, card.ability.extra.mult_gain * G.GAME.current_round.hands_played}}
+    end,
+    calculate = function(self, card, context)
+        if context.joker_main then
+            return {
+                mult_mod = card.ability.extra.mult_gain * G.GAME.current_round.hands_played,
+                message = localize { type = 'variable', key = 'a_mult', vars = { card.ability.extra.mult_gain * G.GAME.current_round.hands_played } }
+            }
+        end
+    end
+}
