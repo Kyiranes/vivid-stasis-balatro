@@ -46,18 +46,18 @@ SMODS.Joker{
     loc_txt = {
         name = "Movator",
         text = {
-            "Gains #1# Mult",
+            "Gains #2# Mult",
             "per consecutive hand",
-            "{C:inactive}(Currently {C:mult}+#2#{C:inactive} Mult)",
+            "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)",
         }
     },
-    config = { extra = {mult_gain = 5} },
+    config = { extra = {mult = 0, mult_gain = 5} },
     rarity = 1,
     atlas = 'vividstasis1',
     pos = { x = 0, y = 0},
     cost = 4,
     loc_vars = function(self, info_queue, card)
-        return { vars = {card.ability.extra.mult_gain, card.ability.extra.mult_gain * G.GAME.current_round.hands_played}}
+        return { vars = {card.ability.extra.mult, card.ability.extra.mult_gain}}
     end,
     calculate = function(self, card, context)
         if context.joker_main then
@@ -66,5 +66,20 @@ SMODS.Joker{
                 message = localize { type = 'variable', key = 'a_mult', vars = { card.ability.extra.mult_gain * G.GAME.current_round.hands_played } }
             }
         end
+        if context.before and not context.blueprint then
+            card.ability.extra.mult = card.ability.extra.mult_gain + card.ability.extra.mult
+            return {
+                message = 'Upgraded!',
+                colour = G.C.MULT,
+                card = card
+            }
+        end
+        if context.discard and not context.blueprint and context.other_card == context.full_hand[#context.full_hand] then
+            card.ability.extra.mult = 0
+            return {
+                message = 'Reset!',
+                colour = G.C.MULT,
+                card = card
+            }
     end
 }
