@@ -64,12 +64,12 @@ SMODS.Joker{
     calculate = function(self, card, context)
         if context.joker_main then
             return {
-                mult_mod = card.ability.extra.mult_gain * G.GAME.current_round.hands_played,
-                message = localize { type = 'variable', key = 'a_mult', vars = { card.ability.extra.mult_gain * G.GAME.current_round.hands_played } }
+                mult_mod = card.ability.extra.mult_gain + card.ability.extra.mult,
+                message = localize { type = 'variable', key = 'a_mult', vars = { card.ability.extra.mult_gain + card.ability.extra.mult } }
             }
         end
         if context.before and not context.blueprint then
-            card.ability.extra.mult = card.ability.extra.mult_gain * G.GAME.current_round.hands_played
+            card.ability.extra.mult = card.ability.extra.mult_gain + card.ability.extra.mult
             return {
                 message = 'Upgraded!',
                 colour = G.C.MULT,
