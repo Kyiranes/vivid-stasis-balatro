@@ -19,9 +19,9 @@ SMODS.Joker{
     loc_txt = {
         name = "Nurse",
         text = {
-            "Gains 40 Chips",
+            "Gains #1# Chips",
             "per unplayed hand",
-            "{C:inactive}(Currently {C:chips}+#1#{C:inactive} Chips)",
+            "{C:inactive}(Currently {C:chips}+#2#{C:inactive} Chips)",
         }
     },
     config = { extra = {chip_gain = 40} },
@@ -30,7 +30,7 @@ SMODS.Joker{
     pos = { x = 0, y = 0},
     cost = 4,
     loc_vars = function(self, info_queue, card)
-        return { vars = {card.ability.extra.chip_gain} }
+        return { vars = {card.ability.extra.chip_gain, card.ability.extra.chip_gain * G.GAME.current_round.hands_left} }
     end,
     calculate = function(self,card,context)
         if context.joker_main then
