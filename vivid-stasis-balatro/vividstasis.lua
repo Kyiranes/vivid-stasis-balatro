@@ -81,5 +81,6 @@ SMODS.Joker{
                 colour = G.C.MULT,
                 card = card
             }
+        end
     end
 }
