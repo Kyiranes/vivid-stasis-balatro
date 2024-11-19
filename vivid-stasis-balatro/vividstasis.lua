@@ -106,12 +106,12 @@ SMODS.Joker{
         return { vars = {card.ability.extra.repetitions}}
     end,
     calculate = function(self,card,context)
-        if context.joker_main and G.GAME.current_round.hands_played == 0 then
+        if cardarea == G.play and full_hand == G.play.cards and scoring_hand == scoring_hand and scoring_name == text and G.GAME.current_round.hands_played == 0 then
             return{
-                message = 'Again!',
+                message = localize('k_again_ex'),
                 color = G.C.FILTER,
                 repetitions = card.ability.extra.repetitions,
-                card = card
+                card = context.other_card
             }
         end
     end
