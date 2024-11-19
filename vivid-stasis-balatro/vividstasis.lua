@@ -96,17 +96,17 @@ SMODS.Joker{
         
         }
     },
-    config = {repetitions = 1},
+    config = {extra = {repetitions = 1}},
     rarity = 2,
     blueprint_compat = true,
     atlas = 'vividstasis1',
     pos = {x = 0, y = 0},
     cost = 5,
-    loc_vars = function(self,card,context)
+    loc_vars = function(self,info_queue,card)
         return { vars = {card.ability.extra.repetitions}}
     end,
     calculate = function(self,card,context)
-        if cardarea == G.play and full_hand == G.play.cards and scoring_hand == scoring_hand and scoring_name == text and G.GAME.current_round.hands_played == 0 then
+        if context.cardarea == G.play and context.repetition and G.GAME.current_round.hands_played == 0 then
             return{
                 message = localize('k_again_ex'),
                 color = G.C.FILTER,
