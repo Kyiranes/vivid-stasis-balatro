@@ -52,7 +52,7 @@ SMODS.Joker{
             "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)",
         }
     },
-    config = { extra = {mult = 0, mult_gain = 5} },
+    config = { extra = {mult = 0, mult_gain = 2} },
     rarity = 1,
     blueprint_compat = true,
     atlas = 'vividstasis1',
@@ -76,7 +76,7 @@ SMODS.Joker{
                 card = card
             }
         end
-        if context.discard and not context.blueprint and context.other_card == context.full_hand[#context.full_hand] then
+        if context.discard and not context.blueprint and context.other_card == context.full_hand[#context.full_hand] and not context.hook then
             card.ability.extra.mult = 0
             return {
                 message = 'Reset!',
