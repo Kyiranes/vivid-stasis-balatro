@@ -52,7 +52,7 @@ SMODS.Joker{
             "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)",
         }
     },
-    config = { extra = {mult = 0, mult_gain = 5} },
+    config = { extra = {mult = 0, mult_gain = 2} },
     rarity = 1,
     blueprint_compat = true,
     atlas = 'vividstasis1',
@@ -103,7 +103,7 @@ SMODS.Joker{
     cost = 4,
     loc_vars = function(self, info_queue, card)
         return { vars = {card.ability.extra.mult}}
-    end,r
+    end,
     calculate = function(self, card, context)
             if context.end_of_round == true then
                 card.ability.extra.handTable = {}
