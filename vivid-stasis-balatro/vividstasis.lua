@@ -19,8 +19,8 @@ SMODS.Joker{
     loc_txt = {
         name = "Nurse",
         text = {
-            "Gains #1# Chips",
-            "per unplayed hand",
+            "Gains +{C:chips}#1#{} Chips for",
+            "each {C:attention}remaining{} hand",
             "{C:inactive}(Currently {C:chips}+#2#{C:inactive} Chips)",
         }
     },
@@ -47,8 +47,8 @@ SMODS.Joker{
     loc_txt = {
         name = "Movator",
         text = {
-            "Gains #2# Mult",
-            "per consecutive hand",
+            "Gains {C:mult}#2#{} Mult",
+            "per {C:attention}consecutive{} hand",
             "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)",
         }
     },
@@ -87,12 +87,46 @@ SMODS.Joker{
     end
 }
 SMODS.Joker{
+    key='bugreport',
+    loc_txt = {
+        name = "Bug Report",
+        text = {
+            "Gives {C:mult}#1#{} Mult",
+            "if hand type unplayed in round",
+        }
+    },
+    config = {extra = {mult = 15, handTable = {}}},
+    rarity = 1,
+    blueprint_compat = true,
+    atlas = 'vividstasis1',
+    pos = { x = 0, y = 0},
+    cost = 4,
+    loc_vars = function(self, info_queue, card)
+        return { vars = {card.ability.extra.mult}}
+    end,r
+    calculate = function(self, card, context)
+            if context.end_of_round == true then
+                card.ability.extra.handTable = {}
+            end
+            if context.joker_main then
+                if not card.ability.extra.handTable[context.scoring_name] then
+                    card.ability.extra.handTable[context.scoring_name] = true
+                    return {
+                        mult_mod = card.ability.extra.mult,
+                        message = localize { type = 'variable', key = 'a_mult', vars = {card.ability.extra.mult} },
+                        colour = G.C.MULT,
+            }
+            end
+        end
+    end
+}
+SMODS.Joker{
     key='mountainview',
     loc_txt = {
         name = "Mountain View",
         text = {
-            "In the first hand of round",
-            "Retriggers all played cards #1# time(s)"
+            "In the {C:attention}first{} hand of round",
+            "Retriggers all played cards {C:attention}#1#{} time(s)"
         
         }
     },
