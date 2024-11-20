@@ -103,19 +103,21 @@ SMODS.Joker{
     cost = 4,
     loc_vars = function(self, info_queue, card)
         return { vars = {card.ability.extra.mult}}
-    end,r
+    end,
     calculate = function(self, card, context)
             if context.end_of_round == true then
                 card.ability.extra.handTable = {}
             end
             if context.joker_main then
                 if not card.ability.extra.handTable[context.scoring_name] then
-                    card.ability.extra.handTable[context.scoring_name] = true
                     return {
                         mult_mod = card.ability.extra.mult,
                         message = localize { type = 'variable', key = 'a_mult', vars = {card.ability.extra.mult} },
                         colour = G.C.MULT,
             }
+        end
+            if context.after then 
+                card.ability.extra.handTable[context.scoring_name] = true
             end
         end
     end
