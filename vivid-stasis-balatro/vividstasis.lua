@@ -152,3 +152,51 @@ SMODS.Joker{
         end
     end
 }
+/* MODS.Joker{
+    key='saturday',
+    loc_txt = {
+        name = "Saturday",
+        text = {
+            "+1 {X:mult,C:white}X#1# {}",
+            "for each Joker held."
+        }
+    },
+    config = { extra = {Xmult = 1} },
+    rarity = 4,
+    blueprint_compat = true,
+    atlas = 'vividstasis1',
+    pos = { x = 0, y = 0},
+    cost = 20,
+    loc_vars = function(self, info_queue, card)
+        return { vars = {card.ability.extra.Xmult}}
+    end
+    calculate = function(self, card, context)
+        
+}
+    */
+SMODS.Joker{
+    key=':3c',
+    loc_txt = {
+        name = ":3c",
+        text = {
+            "{X:mult,C:white} X#1# {} Mult ",
+            "per played 3" 
+        }
+    },
+        config = { extra = {Xmult = 3} },
+        rarity = 4,
+        blueprint_compat = true,
+        atlas = 'vividstasis1',
+        pos = {x = 0, y = 0},
+        cost = 20,
+        loc_vars = function(self, info_queue, card)
+            return { vars = {card.ability.extra.Xmult}}
+        end,
+        calculate = function(self, card, context)
+            if context.individual and context.cardarea == G.play and context.other_card:get_id() == 3 then
+                return{
+                    x_mult = card.ability.extra.Xmult
+                }
+            end
+        end
+}
