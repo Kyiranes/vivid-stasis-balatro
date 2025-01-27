@@ -150,9 +150,6 @@ SMODS.Joker{
         end
     end
 }
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 /* MODS.Joker{
     key='saturday',
     loc_txt = {
@@ -201,6 +198,3 @@ SMODS.Joker{
             end
         end
 }
->>>>>>> parent of 4a25b06 (Finished Saturday)
-=======
->>>>>>> parent of 5442da5 (Merge branch 'main' of https://github.com/Kyiranes/vivid-stasis-balatro)
