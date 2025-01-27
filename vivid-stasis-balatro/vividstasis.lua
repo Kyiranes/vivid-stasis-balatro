@@ -76,7 +76,7 @@ SMODS.Joker{
                 card = card
             }
         end
-        if context.discard and not context.blueprint and context.other_card == context.full_hand[#context.full_hand] and not context.hook then
+        if context.discard and not context.blueprint and context.other_card == context.full_hand[#context.full_hand] then
             card.ability.extra.mult = 0
             return {
                 message = 'Reset!',
