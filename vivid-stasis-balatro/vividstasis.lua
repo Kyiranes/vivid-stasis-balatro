@@ -122,6 +122,28 @@ SMODS.Joker{
         end
     end
 }
+/* SMODS.Joker{
+    key='Jade',
+    loc_txt = {
+        name = "Jade",
+        text = {
+            "Retrigger all {C:attention}Stone{} Cards #1# times.",
+            "Stone cards give {C:attention}#2#{} more chips."
+        }
+    },
+    config = {extra = {reptitions = 1, chips = 50}}
+    rarity = 2,
+    blueprint_compat = true,
+    atlas = 'vividstasis1',
+    pos = { x = 0, y = 0},
+    cost = 6,
+    loc_vars = function(self,info_queue,card)
+        return { vars = {card.ability.extra.reptitions, card.ability.extra.chips}}
+    end, 
+    calculate = function(self, card, context)
+        if context.cardarea == G.play and context.repetition and 
+}
+        */
 SMODS.Joker{
     key='mountainview',
     loc_txt = {
@@ -152,13 +174,14 @@ SMODS.Joker{
         end
     end
 }
-/* MODS.Joker{
+SMODS.Joker{
     key='saturday',
     loc_txt = {
         name = "Saturday",
         text = {
-            "+1 {X:mult,C:white}X#1# {}",
-            "for each Joker held."
+            "+#1# {X:mult,C:white}XMult {}",
+            "for each Joker held.",
+            "{C:inactive}(Currently {X:mult,C:white}X#1#{C:inactive} XMult)"
         }
     },
     config = { extra = {Xmult = 1} },
@@ -169,11 +192,15 @@ SMODS.Joker{
     cost = 20,
     loc_vars = function(self, info_queue, card)
         return { vars = {card.ability.extra.Xmult}}
-    end
+    end,
     calculate = function(self, card, context)
-        
+        if context.joker_main then
+            return {
+                Xmult = #G.jokers.cards
+            }
+        end
+    end
 }
-    */
 SMODS.Joker{
     key=':3c',
     loc_txt = {
