@@ -144,7 +144,8 @@ SMODS.Joker{
             return {
                 message = localize('k_again_ex'),
                 color = G.C.FILTER,
-                repetitions = card.ability.extra.repetitions
+                repetitions = card.ability.extra.repetitions,
+                card = context.other_card
             }
         end
     end
@@ -155,7 +156,7 @@ SMODS.Joker{
         name = "Mountain View",
         text = {
             "In the {C:attention}first{} hand of round",
-            "Retriggers all played cards {C:attention}#1#{} time(s)"
+            "retriggers all played cards {C:attention}#1#{} time(s)"
         
         }
     },
@@ -180,11 +181,37 @@ SMODS.Joker{
     end
 }
 SMODS.Joker{
+    key='bearcreekpark',
+    loc_txt = {
+        name = "Bear Creek Park",
+        text = {
+            "Gives {X:mult,C:white}X#1# {} Mult if first played card",
+            "is a {C:attention}9, 7, 2, or 5 {}"
+        }
+    },
+    config = { extra = {Xmult = 3} },
+    rarity = 3,
+    blueprint_compat = true,
+    atlas = 'vividstasis1',
+    pos = { x = 0, y = 0},
+    cost = 8,
+    loc_vars = function(self, info_queue, card)
+        return { vars = {card.ability.extra.Xmult}}
+    end,
+    calculate = function(self, card, context)
+        if context.joker_main and (context.scoring_hand[1]:get_id() == 2 or context.scoring_hand[1]:get_id() == 5 or context.scoring_hand[1]:get_id() == 7 or context.scoring_hand[1]:get_id() == 9) then
+            return {
+                x_mult = card.ability.extra.Xmult
+            }
+        end
+    end
+}
+SMODS.Joker{
     key='saturday',
     loc_txt = {
         name = "Saturday",
         text = {
-            "+1 {X:mult,C:white}XMult {}",
+            "This joker gains {X:mult,C:white}X1 {} Mult",
             "for each Joker held.",
             "{C:inactive}(Currently {X:mult,C:white}X#1#{C:inactive} XMult)"
         }
@@ -227,3 +254,9 @@ SMODS.Joker{
         end,
         calculate = function(self, card, context)
             if context.individual and context.cardarea == G.play and context.other_card:get_id() == 3 then
+                return{
+                    x_mult = card.ability.extra.Xmult
+                }
+            end
+        end
+}
