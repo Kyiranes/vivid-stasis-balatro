@@ -15,30 +15,38 @@ SMODS.Atlas{
 	py = 95
 }
 SMODS.Joker{
-    key = 'nurse',
+    key='bugreport',
     loc_txt = {
-        name = "Nurse",
+        name = "Bug Report",
         text = {
-            "Gains +{C:chips}#1#{} Chips for",
-            "each {C:attention}remaining{} hand",
-            "{C:inactive}(Currently {C:chips}+#2#{C:inactive} Chips)",
+            "Gives {C:mult}#1#{} Mult",
+            "if hand type unplayed in round",
         }
     },
-    config = { extra = {chip_gain = 40} },
+    config = {extra = {mult = 15, handTable = {}}},
     rarity = 1,
     blueprint_compat = true,
     atlas = 'vividstasis1',
     pos = { x = 0, y = 0},
     cost = 4,
     loc_vars = function(self, info_queue, card)
-        return { vars = {card.ability.extra.chip_gain, card.ability.extra.chip_gain * G.GAME.current_round.hands_left} }
+        return { vars = {card.ability.extra.mult}}
     end,
-    calculate = function(self,card,context)
-        if context.joker_main then
-            return {
-                chip_mod = card.ability.extra.chip_gain * G.GAME.current_round.hands_left + card.ability.extra.chip_gain,
-                message = localize { type = 'variable', key = 'a_chips', vars = { card.ability.extra.chip_gain * G.GAME.current_round.hands_left} }
+    calculate = function(self, card, context)
+            if context.end_of_round == true then
+                card.ability.extra.handTable = {}
+            end
+            if context.joker_main then
+                if not card.ability.extra.handTable[context.scoring_name] then
+                    return {
+                        mult_mod = card.ability.extra.mult,
+                        message = localize { type = 'variable', key = 'a_mult', vars = {card.ability.extra.mult} },
+                        colour = G.C.MULT,
             }
+        end
+            if context.after then 
+                card.ability.extra.handTable[context.scoring_name] = true
+            end
         end
     end
 }
@@ -87,38 +95,30 @@ SMODS.Joker{
     end
 }
 SMODS.Joker{
-    key='bugreport',
+    key = 'nurse',
     loc_txt = {
-        name = "Bug Report",
+        name = "Nurse",
         text = {
-            "Gives {C:mult}#1#{} Mult",
-            "if hand type unplayed in round",
+            "Gains +{C:chips}#1#{} Chips for",
+            "each {C:attention}remaining{} hand",
+            "{C:inactive}(Currently {C:chips}+#2#{C:inactive} Chips)",
         }
     },
-    config = {extra = {mult = 15, handTable = {}}},
+    config = { extra = {chip_gain = 40} },
     rarity = 1,
     blueprint_compat = true,
     atlas = 'vividstasis1',
     pos = { x = 0, y = 0},
     cost = 4,
     loc_vars = function(self, info_queue, card)
-        return { vars = {card.ability.extra.mult}}
+        return { vars = {card.ability.extra.chip_gain, card.ability.extra.chip_gain * G.GAME.current_round.hands_left} }
     end,
-    calculate = function(self, card, context)
-            if context.end_of_round == true then
-                card.ability.extra.handTable = {}
-            end
-            if context.joker_main then
-                if not card.ability.extra.handTable[context.scoring_name] then
-                    return {
-                        mult_mod = card.ability.extra.mult,
-                        message = localize { type = 'variable', key = 'a_mult', vars = {card.ability.extra.mult} },
-                        colour = G.C.MULT,
+    calculate = function(self,card,context)
+        if context.joker_main then
+            return {
+                chip_mod = card.ability.extra.chip_gain * G.GAME.current_round.hands_left + card.ability.extra.chip_gain,
+                message = localize { type = 'variable', key = 'a_chips', vars = { card.ability.extra.chip_gain * G.GAME.current_round.hands_left} }
             }
-        end
-            if context.after then 
-                card.ability.extra.handTable[context.scoring_name] = true
-            end
         end
     end
 }
@@ -212,7 +212,7 @@ SMODS.Joker{
         name = "Chiyo",
         text = {
             "At the end of each round",
-            "Create a {C:attention} Voucher {}skip tag"
+            "Create a {C:attention}Voucher {}skip tag"
         }
     },
     rarity = 4,
