@@ -207,6 +207,29 @@ SMODS.Joker{
     end
 }
 SMODS.Joker{
+    key='chiyo',
+    loc_txt = {
+        name = "Chiyo",
+        text = {
+            "At the end of each round",
+            "Create a {C:attention} Voucher {}skip tag"
+        }
+    },
+    rarity = 4,
+    blueprint_compat = true,
+    atlas = 'vividstasis1',
+    pos = {x = 0, y = 0},
+    cost = 20,
+    calculate = function(self, card, context)
+        if context.end_of_round and context.main_eval then
+            return{
+            message = "+1 Tag",
+            add_tag(Tag('tag_voucher')),
+            }
+        end
+    end
+}
+SMODS.Joker{
     key='saturday',
     loc_txt = {
         name = "Saturday",
