@@ -122,28 +122,33 @@ SMODS.Joker{
         end
     end
 }
-/* SMODS.Joker{
+SMODS.Joker{
     key='Jade',
     loc_txt = {
         name = "Jade",
         text = {
             "Retrigger all {C:attention}Stone{} Cards #1# times.",
-            "Stone cards give {C:attention}#2#{} more chips."
         }
     },
-    config = {extra = {reptitions = 1, chips = 50}}
+    config = {extra = {repetitions = 1}},
     rarity = 2,
     blueprint_compat = true,
     atlas = 'vividstasis1',
     pos = { x = 0, y = 0},
     cost = 6,
     loc_vars = function(self,info_queue,card)
-        return { vars = {card.ability.extra.reptitions, card.ability.extra.chips}}
+        return { vars = {card.ability.extra.repetitions}}
     end, 
     calculate = function(self, card, context)
-        if context.cardarea == G.play and context.repetition and 
+        if context.cardarea == G.play and context.repetition and SMODS.has_enhancement(context.other_card, 'm_stone') then
+            return {
+                message = localize('k_again_ex'),
+                color = G.C.FILTER,
+                repetitions = card.ability.extra.repetitions
+            }
+        end
+    end
 }
-        */
 SMODS.Joker{
     key='mountainview',
     loc_txt = {
@@ -179,7 +184,7 @@ SMODS.Joker{
     loc_txt = {
         name = "Saturday",
         text = {
-            "+#1# {X:mult,C:white}XMult {}",
+            "+1 {X:mult,C:white}XMult {}",
             "for each Joker held.",
             "{C:inactive}(Currently {X:mult,C:white}X#1#{C:inactive} XMult)"
         }
@@ -191,7 +196,7 @@ SMODS.Joker{
     pos = { x = 0, y = 0},
     cost = 20,
     loc_vars = function(self, info_queue, card)
-        return { vars = {card.ability.extra.Xmult}}
+        return { vars = {card.ability.extra.Xmult, 1 + card.ability.extra.Xmult * (G.jokers and #G.jokers.cards or 0)}}
     end,
     calculate = function(self, card, context)
         if context.joker_main then
@@ -199,6 +204,7 @@ SMODS.Joker{
                 Xmult = #G.jokers.cards
             }
         end
+        
     end
 }
 SMODS.Joker{
@@ -207,7 +213,7 @@ SMODS.Joker{
         name = ":3c",
         text = {
             "{X:mult,C:white} X#1# {} Mult ",
-            "per played 3" 
+            "per played {C:attention}3 {}" 
         }
     },
         config = { extra = {Xmult = 3} },
@@ -221,9 +227,3 @@ SMODS.Joker{
         end,
         calculate = function(self, card, context)
             if context.individual and context.cardarea == G.play and context.other_card:get_id() == 3 then
-                return{
-                    x_mult = card.ability.extra.Xmult
-                }
-            end
-        end
-}
