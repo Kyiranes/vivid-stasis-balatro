@@ -44,7 +44,7 @@ SMODS.Joker{
                         colour = G.C.MULT,
             }
         end
-            if context.after then 
+            if context.after then
                 card.ability.extra.handTable[context.scoring_name] = true
             end
         end
@@ -138,7 +138,7 @@ SMODS.Joker{
     cost = 6,
     loc_vars = function(self,info_queue,card)
         return { vars = {card.ability.extra.repetitions}}
-    end, 
+    end,
     calculate = function(self, card, context)
         if context.cardarea == G.play and context.repetition and SMODS.has_enhancement(context.other_card, 'm_stone') then
             return {
@@ -157,7 +157,7 @@ SMODS.Joker{
         text = {
             "In the {C:attention}first{} hand of round",
             "retriggers all played cards {C:attention}#1#{} time(s)"
-        
+
         }
     },
     config = {extra = {repetitions = 1}},
@@ -240,7 +240,7 @@ SMODS.Joker{
             }
         end
     end
-    
+
 
 }
 SMODS.Joker{
@@ -263,6 +263,37 @@ SMODS.Joker{
             message = "+1 Tag",
             add_tag(Tag('tag_voucher')),
             }
+        end
+    end
+}
+SMODS.Joker{
+    key='eri',
+    loc_txt = {
+        name = "Eri",
+        text = {
+            "This joker gains 1 hand",
+            "for every 12 discards used.",
+            "{C:inactive}(Currently {C:Chips}#1#{C:inactive} Hands and #2# discards used.)"
+        }
+    },
+    config = { extra = {hands = 0, discards = 12, discard_count = 0} },
+    loc_vars = function(self, info_queue, card)
+        return { vars = {card.ability.extra.hands, card.ability.extra.discard_count}}
+    end,
+    rarity = 4,
+    blueprint_compat = false,
+    atlas = 'vividstasis1',
+    pos = { x = 0, y = 0},
+    cost = 20,
+    calculate = function(self, card, context)
+        if context.pre_discard then
+            card.ability.extra.discard_count = card.ability.extra.discard_count + 1
+                if card.ability.extra.discard_count >= card.ability.extra.discards then
+                    card.ability.extra.discard_count = 0
+                    G.GAME.round_resets.hands = G.GAME.round_resets.hands + 1
+                    card.ability.extra.hands = card.ability.extra.hands + 1
+                    ease_hands_played(1)
+                end
         end
     end
 }
@@ -291,7 +322,6 @@ SMODS.Joker{
                 Xmult = #G.jokers.cards
             }
         end
-        
     end
 }
 SMODS.Joker{
