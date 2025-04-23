@@ -212,7 +212,7 @@ SMODS.Joker{
         name = "Kenban Vanquishers",
         text = {
             "This joker gains {X:mult,C:white}X#2# {} mult if played hand",
-            "beats the boss blind requirement",
+            "beats the blind requirement",
             "{C:inactive}(Currently {X:mult,C:white}X#1#{C:inactive} Mult)"
         }
     },
