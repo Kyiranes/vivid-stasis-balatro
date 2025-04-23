@@ -207,6 +207,43 @@ SMODS.Joker{
     end
 }
 SMODS.Joker{
+    key='kenbanvanquishers',
+    loc_txt = {
+        name = "Kenban Vanquishers",
+        text = {
+            "This joker gains {X:mult,C:white}X#2# {} mult if played hand",
+            "beats the boss blind requirement",
+            "{C:inactive}(Currently {X:mult,C:white}X#1#{C:inactive} Mult)"
+        }
+    },
+    config = { extra = {mult_gain = 0.5, Xmult = 1} },
+    rarity = 3,
+    blueprint_compat = true,
+    atlas = 'vividstasis1',
+    pos = { x = 0, y = 0},
+    cost = 8,
+    loc_vars = function(self, info_queue, card)
+        return { vars = {card.ability.extra.Xmult, card.ability.extra.mult_gain}}
+    end,
+    calculate = function(self, card, context)
+        if context.joker_main then
+            return {
+                Xmult = card.ability.extra.Xmult
+            }
+        end
+        if context.after and hand_chips*mult > G.GAME.blind.chips and not context.blueprint then
+            card.ability.extra.Xmult = card.ability.extra.Xmult + card.ability.extra.mult_gain
+            return {
+                message = 'Upgraded!',
+                colour = G.C.XMULT,
+                card = card
+            }
+        end
+    end
+    
+
+}
+SMODS.Joker{
     key='chiyo',
     loc_txt = {
         name = "Chiyo",
@@ -236,7 +273,7 @@ SMODS.Joker{
         text = {
             "This joker gains {X:mult,C:white}X1 {} Mult",
             "for each Joker held.",
-            "{C:inactive}(Currently {X:mult,C:white}X#1#{C:inactive} XMult)"
+            "{C:inactive}(Currently {X:mult,C:white}X#1#{C:inactive} Mult)"
         }
     },
     config = { extra = {Xmult = 1} },
@@ -262,8 +299,8 @@ SMODS.Joker{
     loc_txt = {
         name = ":3c",
         text = {
-            "{X:mult,C:white} X#1# {} Mult ",
-            "per played {C:attention}3 {}" 
+            "Played {C:attention}3s{} give",
+            "{X:mult,C:white} X#1# {} Mult when scored."
         }
     },
         config = { extra = {Xmult = 3} },
