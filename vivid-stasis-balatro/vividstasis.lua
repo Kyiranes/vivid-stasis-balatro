@@ -104,7 +104,7 @@ SMODS.Joker{
             "{C:inactive}(Currently {C:chips}+#2#{C:inactive} Chips)",
         }
     },
-    config = { extra = {chip_gain = 40} },
+    config = { extra = {chip_gain = 20} },
     rarity = 1,
     blueprint_compat = true,
     atlas = 'vividstasis1',
@@ -127,7 +127,7 @@ SMODS.Joker{
     loc_txt = {
         name = "Jade",
         text = {
-            "Retrigger all {C:attention}Stone{} Cards #1# times.",
+            "Retrigger all played {C:attention}Stone{} cards #1# times.",
         }
     },
     config = {extra = {repetitions = 1}},
@@ -139,13 +139,20 @@ SMODS.Joker{
     loc_vars = function(self,info_queue,card)
         return { vars = {card.ability.extra.repetitions}}
     end,
+    in_pool = function(self,args)
+        for i, _playing_card_in_deck in pairs(G.playing_cards) do
+        if SMODS.has_enhancement(_playing_card_in_deck, "m_stone") then
+          return true
+        end
+        end
+    end,
     calculate = function(self, card, context)
         if context.cardarea == G.play and context.repetition and SMODS.has_enhancement(context.other_card, 'm_stone') then
             return {
                 message = localize('k_again_ex'),
                 color = G.C.FILTER,
                 repetitions = card.ability.extra.repetitions,
-                card = context.other_card
+                card = card
             }
         end
     end
@@ -212,7 +219,7 @@ SMODS.Joker{
         name = "Kenban Vanquishers",
         text = {
             "This joker gains {X:mult,C:white}X#2# {} mult if played hand",
-            "beats the blind requirement",
+            "exceeds the required chips",
             "{C:inactive}(Currently {X:mult,C:white}X#1#{C:inactive} Mult)"
         }
     },
@@ -249,7 +256,7 @@ SMODS.Joker{
         name = "Chiyo",
         text = {
             "At the end of each round",
-            "Create a {C:attention}Voucher {}skip tag"
+            "Create a {C:attention}Voucher {}tag"
         }
     },
     rarity = 4,
@@ -271,8 +278,7 @@ SMODS.Joker{
     loc_txt = {
         name = "Eri",
         text = {
-            "This joker gains 1 hand",
-            "for every 12 discards used.",
+            "+1 hand for every 12 discards used this run.",
             "{C:inactive}(Currently {C:Chips}#1#{C:inactive} Hands and #2# discards used.)"
         }
     },
@@ -286,6 +292,10 @@ SMODS.Joker{
     pos = { x = 0, y = 0},
     cost = 20,
     calculate = function(self, card, context)
+        if context.selling_self then
+            G.GAME.round_resets.hands = G.GAME.round_resets.hands - card.ability.extra.hands
+            card.ability.extra.hands = 0
+        end
         if context.pre_discard then
             card.ability.extra.discard_count = card.ability.extra.discard_count + 1
                 if card.ability.extra.discard_count >= card.ability.extra.discards then
@@ -293,7 +303,7 @@ SMODS.Joker{
                     G.GAME.round_resets.hands = G.GAME.round_resets.hands + 1
                     card.ability.extra.hands = card.ability.extra.hands + 1
                     ease_hands_played(1)
-                end
+                end    
         end
     end
 }
