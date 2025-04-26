@@ -113,10 +113,12 @@ SMODS.Joker{
     end,
     calculate = function(self,card,context)
         if context.joker_main then
+            if(G.GAME.current_round.hands_left > 0) then
             return {
                 chip_mod = card.ability.extra.chip_gain * G.GAME.current_round.hands_left + card.ability.extra.chip_gain,
                 message = localize { type = 'variable', key = 'a_chips', vars = { card.ability.extra.chip_gain * G.GAME.current_round.hands_left} }
             }
+            end
         end
     end
 }
@@ -125,7 +127,7 @@ SMODS.Joker{
     loc_txt = {
         name = "Speaker Box",
         text = {
-            "Rerolls always cost {C:attention}$7{}"
+            "Rerolls always cost {C:money}$7{}"
         }
     },
     rarity = 1,
@@ -336,7 +338,7 @@ SMODS.Joker{
     pos = { x = 0, y = 0},
     cost = 20,
     loc_vars = function(self, info_queue, card)
-        return { vars = {card.ability.extra.xmult}}
+        return { vars = {G.jokers and #G.jokers.cards or 0}}
     end,
     calculate = function(self, card, context)
         if context.joker_main then
