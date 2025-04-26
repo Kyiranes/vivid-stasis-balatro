@@ -1,13 +1,11 @@
---- STEAMODDED HEADER
---- MOD_NAME: vivid/stasis Balatro Mod
---- MOD_ID: stasisMOD
---- MOD_AUTHOR: [TwinklingStar]
---- MOD_DESCRIPTION: Mod adding vivid stasis characters and developers into balatro.
---- DEPENDENCIES: [Steamodded>=1.0.0~ALPHA-0812d]
---- BADGE_COLOR: CD015A
---- PREFIX: vist
-----------------------------------------------
-------------MOD CODE -------------------------
+local oldcalculate_reroll_cost = calculate_reroll_cost
+function calculate_reroll_cost(skip_increment)
+    if #SMODS.find_card('j_vist_speakerbox') > 0 then
+        G.GAME.current_round.reroll_cost = 7
+        return
+    end
+    return oldcalculate_reroll_cost(skip_increment)
+end
 SMODS.Atlas{
     key = "vividstasis1",
     path = "vividstasis1.png",
@@ -55,8 +53,8 @@ SMODS.Joker{
     loc_txt = {
         name = "Movator",
         text = {
-            "Gains {C:mult}#2#{} Mult",
-            "per {C:attention}consecutive{} hand",
+            "Gains {C:mult}+#2#{} Mult",
+            "per {C:attention}consecutive{} hand played",
             "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)",
         }
     },
@@ -99,7 +97,7 @@ SMODS.Joker{
     loc_txt = {
         name = "Nurse",
         text = {
-            "Gains +{C:chips}#1#{} Chips for",
+            "Gains {C:chips}+#1#{} Chips for",
             "each {C:attention}remaining{} hand",
             "{C:inactive}(Currently {C:chips}+#2#{C:inactive} Chips)",
         }
@@ -121,6 +119,20 @@ SMODS.Joker{
             }
         end
     end
+}
+SMODS.Joker{
+    key = 'speakerbox',
+    loc_txt = {
+        name = "Speaker Box",
+        text = {
+            "Rerolls always cost {C:attention}$7{}"
+        }
+    },
+    rarity = 1,
+    blueprint_compat = false,
+    atlas = 'vividstasis1',
+    pos = { x = 0, y = 0},
+    cost = 5
 }
 SMODS.Joker{
     key='Jade',
@@ -278,8 +290,8 @@ SMODS.Joker{
     loc_txt = {
         name = "Eri",
         text = {
-            "+1 hand for every 12 discards used this run.",
-            "{C:inactive}(Currently {C:Chips}#1#{C:inactive} Hands and #2# discards used.)"
+            "{C:chips}+1{} hand for every {C:mult}12{} discards used this run.",
+            "{C:inactive}(Currently {C:chips}#1#{}{C:inactive} Hands and {C:mult}#2#{} discards used.)"
         }
     },
     config = { extra = {hands = 0, discards = 12, discard_count = 0} },
@@ -312,24 +324,25 @@ SMODS.Joker{
     loc_txt = {
         name = "Saturday",
         text = {
-            "This joker gains {X:mult,C:white}X1 {} Mult",
+            "This joker gives {X:mult,C:white}X1{} Mult",
             "for each Joker held.",
             "{C:inactive}(Currently {X:mult,C:white}X#1#{C:inactive} Mult)"
         }
     },
-    config = { extra = {Xmult = 1} },
+    config = { extra = {xmult = 1} },
     rarity = 4,
     blueprint_compat = true,
     atlas = 'vividstasis1',
     pos = { x = 0, y = 0},
     cost = 20,
     loc_vars = function(self, info_queue, card)
-        return { vars = {card.ability.extra.Xmult, 1 + card.ability.extra.Xmult * (G.jokers and #G.jokers.cards or 0)}}
+        return { vars = {card.ability.extra.xmult}}
     end,
     calculate = function(self, card, context)
         if context.joker_main then
+            card.ability.extra.xmult = #G.jokers.cards
             return {
-                Xmult = #G.jokers.cards
+                xmult = card.ability.extra.xmult
             }
         end
     end

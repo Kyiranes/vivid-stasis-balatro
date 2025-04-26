@@ -1,0 +1,14 @@
+{
+	"id": "stasisMod",
+	"name": "Vivid Stasis",
+	"display_name": "V/S",
+	"author": ["Star, Inksurgence, Lyri, Snail"],
+	"description": "Mod adding various vivid/stasis inspired cards",
+	"prefix": "vist",
+	"main_file": "vividstasis.lua",
+	"priority": 0,
+	"badge_colour": "CD015A",
+	"badge_text_colour": "FFFFFF",
+	"version": "1.0.0",
+	"dependencies": []
+}
