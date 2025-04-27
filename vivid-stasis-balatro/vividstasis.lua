@@ -17,15 +17,15 @@ SMODS.Joker{
     loc_txt = {
         name = "Bug Report",
         text = {
-            "Gives {C:mult}#1#{} Mult",
-            "if hand type unplayed in round",
+            "{C:mult}+#1#{} Mult if",
+            "hand type unplayed in round",
         }
     },
     config = {extra = {mult = 15, handTable = {}}},
     rarity = 1,
     blueprint_compat = true,
     atlas = 'vividstasis1',
-    pos = { x = 0, y = 0},
+    pos = { x = 1, y = 0},
     cost = 4,
     loc_vars = function(self, info_queue, card)
         return { vars = {card.ability.extra.mult}}
@@ -134,7 +134,14 @@ SMODS.Joker{
     blueprint_compat = false,
     atlas = 'vividstasis1',
     pos = { x = 0, y = 0},
-    cost = 5
+    cost = 5,
+    add_to_deck = function(self, card, from_debuff)
+        G.GAME.current_round.free_rerolls = 7
+        calculate_reroll_cost(true)
+    end,
+    remove_from_deck = function(self, card, from_debuff)
+        calculate_reroll_cost(true)
+    end
 }
 SMODS.Joker{
     key='Jade',
@@ -198,6 +205,66 @@ SMODS.Joker{
                 repetitions = card.ability.extra.repetitions,
                 card = context.other_card
             }
+        end
+    end
+}
+SMODS.Joker{
+    key='salmonnigiri',
+    loc_txt = {
+        name = "Salmon Nigiri",
+        text = {
+            "For the next {C:attention}#1#{} rounds",
+            "all cards give {C:money}$#2#{} when scored."
+        }
+    },
+    config = {extra = {roundcount = 5, money = 2}},
+    rarity = 2,
+    blueprint_compat = true,
+    atlas = 'vividstasis1',
+    pos = {x = 0, y = 0},
+    cost = 5,
+    loc_vars = function(self,info_queue,card)
+        return { vars = {card.ability.extra.roundcount, card.ability.extra.money}}
+    end,
+    calculate = function(self,card,context)
+        if context.individual and context.cardarea == G.play then
+            return{
+                dollars = card.ability.extra.money,
+                card = card
+            }
+        end
+        if context.end_of_round then
+            card.ability.extra.roundcount = card.ability.extra.roundcount - 1
+            return{
+                message = "Consumed!"
+            }
+        end
+        if card.ability.extra.roundcount == 0 then
+            G.E_MANAGER:add_event(Event({
+                func = function()
+                    play_sound('tarot1')
+                    card.T.r = -0.2
+                    card:juice_up(0.3, 0.4)
+                    card.states.drag.is = true
+                    card.children.center.pinch.x = true
+                    G.E_MANAGER:add_event(Event({
+                        trigger = 'after',
+                        delay = 0.3,
+                        blockable = false,
+                        func = function()
+                            G.jokers:remove_card(card)
+                            card:remove()
+                            card = nil
+                            return true;
+                        end
+                    }))
+                    return true
+                end
+            }))
+            return{
+            message = "All Gone!"
+            }
+
         end
     end
 }
@@ -292,8 +359,10 @@ SMODS.Joker{
     loc_txt = {
         name = "Eri",
         text = {
-            "{C:chips}+1{} hand for every {C:mult}12{} discards used this run.",
-            "{C:inactive}(Currently {C:chips}#1#{}{C:inactive} Hands and {C:mult}#2#{} discards used.)"
+            "{C:chips}+1{} hand for",
+            "every {C:mult}12{} discards used this run.",
+            "{C:inactive}(Currently {C:chips}#1#{}{C:inactive} Hands",
+            "and {C:mult}#2#{} discards used.)"
         }
     },
     config = { extra = {hands = 0, discards = 12, discard_count = 0} },
