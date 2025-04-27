@@ -416,6 +416,11 @@ SMODS.Joker{
                 xmult = card.ability.extra.xmult
             }
         end
+        if context.selling_card and context.card.config.center.key == 'j_egg' then
+            return{
+                message = "Poggers"
+            }
+        end
     end
 }
 SMODS.Joker{
