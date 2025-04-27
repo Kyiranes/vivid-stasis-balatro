@@ -1,7 +1,7 @@
 local oldcalculate_reroll_cost = calculate_reroll_cost
 function calculate_reroll_cost(skip_increment)
     if #SMODS.find_card('j_vist_speakerbox') > 0 then
-        G.GAME.current_round.reroll_cost = 7
+        G.GAME.current_round.reroll_cost = 5
         return
     end
     return oldcalculate_reroll_cost(skip_increment)
@@ -127,7 +127,7 @@ SMODS.Joker{
     loc_txt = {
         name = "Speaker Box",
         text = {
-            "Rerolls always cost {C:money}$7{}"
+            "Rerolls always cost {C:money}$5{}"
         }
     },
     rarity = 1,
@@ -136,7 +136,7 @@ SMODS.Joker{
     pos = { x = 0, y = 0},
     cost = 5,
     add_to_deck = function(self, card, from_debuff)
-        G.GAME.current_round.free_rerolls = 7
+        G.GAME.current_round.free_rerolls = 5
         calculate_reroll_cost(true)
     end,
     remove_from_deck = function(self, card, from_debuff)
