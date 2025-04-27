@@ -1,6 +1,6 @@
 local oldcalculate_reroll_cost = calculate_reroll_cost
 function calculate_reroll_cost(skip_increment)
-    if #SMODS.find_card('j_vist_speakerbox') > 0 then
+    if #SMODS.find_card('j_vist_speakerbox') > 0 and G.GAME.current_round.free_rerolls == 0 then
         G.GAME.current_round.reroll_cost = 5
         return
     end
@@ -135,12 +135,12 @@ SMODS.Joker{
     atlas = 'vividstasis1',
     pos = { x = 0, y = 0},
     cost = 5,
+    
     add_to_deck = function(self, card, from_debuff)
-        G.GAME.current_round.free_rerolls = 5
         calculate_reroll_cost(true)
     end,
     remove_from_deck = function(self, card, from_debuff)
-        calculate_reroll_cost(true)
+        calculate_reroll_cost(false)
     end
 }
 SMODS.Joker{
