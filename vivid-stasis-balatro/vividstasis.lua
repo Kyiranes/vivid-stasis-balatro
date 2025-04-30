@@ -32,7 +32,7 @@ SMODS.Joker {
         return { vars = { card.ability.extra.mult } }
     end,
     calculate = function(self, card, context)
-        if context.end_of_round == true then
+        if context.end_of_round then
             card.ability.extra.handTable = {}
         end
         if context.joker_main then
@@ -46,7 +46,8 @@ SMODS.Joker {
             
         end
         if context.after then
-                card.ability.extra.handTable[context.scoring_name] = true
+            print(context.scoring_name)
+            card.ability.extra.handTable[context.scoring_name] = true
         end
     end
 }
@@ -57,6 +58,7 @@ SMODS.Joker {
         text = {
             "Gains {C:mult}+#2#{} Mult",
             "per {C:attention}consecutive{} hand played",
+            "Resets on Discard",
             "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)",
         }
     },
@@ -133,7 +135,7 @@ SMODS.Joker{
             "This Joker gains {C:mult}+#1#{} Mult",
             "per {C:attention}consecutive{} hand played",
             "without a scoring {C:attention}number{}",
-            "{C:inactive}(Currently {C:mult}+#2#{C:inactive} Mult"
+            "{C:inactive}(Currently {C:mult}+#2#{C:inactive} Mult)"
         }
     },
     config = { extra = { mult_gain = 3, mult = 0 } },
@@ -147,26 +149,33 @@ SMODS.Joker{
     end,
     calculate = function(self, card, context)
         if context.joker_main then
-            for x =1, #G.play.cards do
+            if card.ability.extra.mult > 0 then
+                return{
+                    mult_mod = card.ability.extra.mult,
+                    message = localize { type = 'variable', key = 'a_mult', vars = { card.ability.extra.mult } }
+                }
+            end
+        end
+        
+        if context.before and not context.blueprint then
+            local hasnumber = false
+            for x = 1, #G.play.cards do
                 if not G.play.cards[x]:is_face() then
-                    card.ability.extra.mult = 0
-                    return{
-
-                    }
+                    hasnumber = true
                 end
             end
-            return{
-            mult_mod = card.ability.extra.mult,
-            message = localize { type = 'variable', key = 'a_mult', vars = { card.ability.extra.mult } }
-            }
-        end
-        if context.before and not context.blueprint then
-            card.ability.extra.mult = card.ability.extra.mult_gain + card.ability.extra.mult
-            return {
-                message = 'Upgraded!',
-                colour = G.C.MULT,
-                card = card
-            }
+            if hasnumber then
+                card.ability.extra.mult = 0
+                return{
+                    message = 'Reset!',
+                    colour = G.C.RED
+                }
+            else
+                card.ability.extra.mult = card.ability.extra.mult + card.ability.extra.mult_gain
+                return{
+                    message = 'Upgrade!'
+                }
+            end
         end
     end
 }
