@@ -125,6 +125,51 @@ SMODS.Joker {
         end
     end
 }
+SMODS.Joker{
+    key = "okaihouexpress",
+    loc_txt = {
+        name = "Okaihou Express",
+        text = {
+            "This Joker gains {C:mult}+#1#{} Mult",
+            "per {C:attention}consecutive{} hand played",
+            "without a scoring {C:attention}number{}",
+            "{C:inactive}(Currently {C:mult}+#2#{C:inactive} Mult"
+        }
+    },
+    config = { extra = { mult_gain = 3, mult = 0 } },
+    rarity = 1,
+    blueprint_compat = true,
+    atlas = 'vividstasis1',
+    pos = { x = 0, y = 0 },
+    cost = 6,
+    loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.mult_gain, card.ability.extra.mult } }
+    end,
+    calculate = function(self, card, context)
+        if context.joker_main then
+            for x =1, #G.play.cards do
+                if not G.play.cards[x]:is_face() then
+                    card.ability.extra.mult = 0
+                    return{
+
+                    }
+                end
+            end
+            return{
+            mult_mod = card.ability.extra.mult,
+            message = localize { type = 'variable', key = 'a_mult', vars = { card.ability.extra.mult } }
+            }
+        end
+        if context.before and not context.blueprint then
+            card.ability.extra.mult = card.ability.extra.mult_gain + card.ability.extra.mult
+            return {
+                message = 'Upgraded!',
+                colour = G.C.MULT,
+                card = card
+            }
+        end
+    end
+}
 SMODS.Joker {
     key = 'speakerbox',
     loc_txt = {
@@ -211,6 +256,7 @@ SMODS.Joker {
         end
     end
 }
+
 SMODS.Joker {
     key = 'salmonnigiri',
     loc_txt = {
