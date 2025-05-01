@@ -156,7 +156,6 @@ SMODS.Joker{
                 }
             end
         end
-        
         if context.before and not context.blueprint then
             local hasnumber = false
             for x = 1, #G.play.cards do
@@ -291,7 +290,7 @@ SMODS.Joker {
                 card = card
             }
         end
-        if context.end_of_round then
+        if context.end_of_round and context.cardarea == G.jokers then
             card.ability.extra.roundcount = card.ability.extra.roundcount - 1
             return {
                 message = "Consumed!"
