@@ -178,6 +178,35 @@ SMODS.Joker{
         end
     end
 }
+SMODS.Joker{
+    key = 'plainrice',
+    loc_txt = {
+        name = "Plain Rice",
+        text = {
+            "Gains {C:chips}+#1#{} Chips",
+            "Decreases by #2# every time a card or pack is purchased.",
+        }
+    },
+    rarity = 1,
+    blueprint_compat = true,
+    atlas = 'vividstasis1',
+    pos = {x = 0, y = 0},
+    cost = 4,
+    loc_vars = function(self,info_queue,card)
+        return { vars = {card.ability.extra.chips, card.ability.extra.chip_gain}}
+    end,
+    calculate = function(self,card,context)
+        if context.joker_main then
+            return{
+                chips = card.ability.extra.chips
+            }
+        end
+        if context.buying_card or context.open_booster then
+            return{
+                card.ability.extra.chips = card.ability.extra.chips - card.ability.extra.chip_gain
+            }
+
+}
 SMODS.Joker {
     key = 'speakerbox',
     loc_txt = {
