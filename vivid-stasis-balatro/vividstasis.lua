@@ -183,10 +183,12 @@ SMODS.Joker{
     loc_txt = {
         name = "Plain Rice",
         text = {
-            "Gains {C:chips}+#1#{} Chips",
-            "Decreases by #2# every time a card or pack is purchased.",
+            "{C:chips}+#1#{} Chips",
+            "{C:inactive}(Decreases by {C:chips}#2#{}",
+            "{C:inactive}every time a card or pack is purchased)",
         }
     },
+    config = { extra = {chips = 75, chip_gain = 5} },
     rarity = 1,
     blueprint_compat = true,
     atlas = 'vividstasis1',
@@ -202,8 +204,10 @@ SMODS.Joker{
             }
         end
         if context.buying_card or context.open_booster then
+            card.ability.extra.chips = card.ability.extra.chips - card.ability.extra.chip_gain
             return{
-                card.ability.extra.chips = card.ability.extra.chips - card.ability.extra.chip_gain
+                message = localize { type = 'variable', key = 'a_chips_minus', vars = { card.ability.extra.chips} },
+                colour = G.C.CHIPS
             }
         end
     end
@@ -235,7 +239,7 @@ SMODS.Joker {
     loc_txt = {
         name = "Jade",
         text = {
-            "Retrigger all played {C:attention}Stone{} cards #1# times.",
+            "Retrigger all played {C:attention}Stone{} cards #1# time(s).",
         }
     },
     config = { extra = { repetitions = 1 } },
@@ -449,7 +453,7 @@ SMODS.Joker {
             "{C:chips}+1{} hand for",
             "every {C:mult}12{} discards used this run.",
             "{C:inactive}(Currently {C:chips}#1#{}{C:inactive} Hands",
-            "and {C:mult}#2#{} discards used.)"
+            "{C:inactive}and {C:mult}#2#{} {C:inactive}discards used.)"
         }
     },
     config = { extra = { hands = 0, discards = 12, discard_count = 0 } },
